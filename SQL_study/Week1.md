@@ -3,6 +3,7 @@
 ## 활용할 쿼리문
 
 - select
+
 컬럼을 선택할 때 쓰는 쿼리문으로 From과 같이 사용한다.
 
 ```
@@ -11,6 +12,7 @@ FROM database as db
 ```
 
 - orderby
+
 Sorting을 해주는 쿼리문 
 
 ```
@@ -20,6 +22,7 @@ orderby db.artist
 ```
 
 - select distinct
+
 Unique 값들을 추출할 때 쓰인다.
 
 ```
@@ -28,6 +31,7 @@ FROM database.album
 ```
 
 - where
+
 파이썬의 조건문과 같은 기능을 가진다.
 
 ```
@@ -37,7 +41,13 @@ WHERE month = 1
 ```
 
 - Limit
+
 파이썬의 df.head() 와 같은 기능으로 데이터의 형태를 확인하기 위한 쿼리문
+
+```
+SELECT * FROM table
+LIMIT 100
+```
 
 - Fetch
 
@@ -63,6 +73,7 @@ WHERE rank in (1,2,3)
 ```
 
 - Between
+
 Logical Operator로 범위내에 있는 row들만 선택할 수 있게 해주는 쿼리문
 
 ```
@@ -72,6 +83,7 @@ WHERE year_rank Between 5 AND 10
 ```
 
 - Like
+
 Logical Operator로 파이썬의 정규식과 같은 기능을하는 쿼리문
 
 ```
@@ -81,6 +93,7 @@ WHERE "group" LIKE 'Snoop%'
 ```
 
 - Isnull
+
 Logical Operator로 결측치가 포함된 row만 추출하게 하는 쿼리문
 
 ```
