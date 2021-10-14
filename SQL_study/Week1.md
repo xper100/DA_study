@@ -3,15 +3,91 @@
 활용할 쿼리문
 
 - select
+컬럼을 선택할 때 쓰는 쿼리문으로 From과 같이 사용한다.
+
+```
+SELECT db.year, db.month, db.id
+FROM database as db
+```
+
 - orderby
+Sorting을 해주는 쿼리문 
+
+```
+SELECT *
+FROM database as db
+orderby db.artist
+```
+
 - select distinct
+Unique 값들을 추출할 때 쓰인다.
+
+```
+SELECT DISTINCT month
+FROM database.album
+```
+
 - where
+파이썬의 조건문과 같은 기능을 가진다.
+
+```
+SELECT * 
+FROM database
+WHERE month = 1
+```
+
 - Limit
+파이썬의 df.head() 와 같은 기능으로 데이터의 형태를 확인하기 위한 쿼리문
+
 - Fetch
+
+보통 orderby와 offset이 같이 쓰이며 offset에 설정된 시작점에서 Fetch에 설정된 번호가 나타나기까지 순차적으로 진행되게 하는 쿼리문
+파이썬의 range()와 비슷한 듯 하다.
+
+```
+SELECT *
+FROM table
+ORDERBY column
+OFFSET (starting point)
+FETCH NEXT k(constant) ROWS ONLY;
+```
+
 - In
+
+Logical Operator로 리스트안의 값들이 조건문 값의 속해있는지 확인할 수 있는 쿼리문
+
+```
+SELECT *
+FROM table
+WHERE rank in (1,2,3)
+```
+
 - Between
+Logical Operator로 범위내에 있는 row들만 선택할 수 있게 해주는 쿼리문
+
+```
+SELECT * 
+FROM table
+WHERE year_rank Between 5 AND 10
+```
+
 - Like
+Logical Operator로 파이썬의 정규식과 같은 기능을하는 쿼리문
+
+```
+SELECT *
+FROM table
+WHERE "group" LIKE 'Snoop%'
+```
+
 - Isnull
+Logical Operator로 결측치가 포함된 row만 추출하게 하는 쿼리문
+
+```
+SELECT * FROM table
+WHERE artist IS NULL
+```
+
 
 
 #관계형 데이터베이스란?
