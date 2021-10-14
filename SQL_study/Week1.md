@@ -276,3 +276,8 @@ where first_name ='Nick' or last_name ='Hunt';
 select first_name as firstname, last_name as lastname
 from actor;
 ```
+
+
+# 처음 알게된 것
+- MOD(dividend, divider) => 파이썬의 '%' operation과 같은 것
+- concat(a,b,c) as new_colname => 컬럼을 함쳐서 새로운 컬럼으로 재생산
