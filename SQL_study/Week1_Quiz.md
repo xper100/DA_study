@@ -56,6 +56,7 @@ where date(orderdate) between date('2017-09-02') and date('2017-09-03') ;
 문제8번) products 테이블을 활용하여, productdescription에 상품 상세 설명 값이 없는  상품 데이터를 모두 알려주세요.
 - 풀이 1
 ```
+select *
 from products
 where productdescription is null or productdescription = ' ';
 ```
