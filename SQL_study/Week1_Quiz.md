@@ -17,7 +17,7 @@ order by orderdate desc;
 문제3번)  employees 테이블을 이용하여, 705 아이디를 가진 직원의 , 이름, 성과  해당 직원의  태어난 해를 확인해주세요.
 
 ```
-select EmpFirstName, EmpLastName
+select EmpFirstName, EmpLastName, extract (year from empbirthdate) as birth_year
 from employees
 where employeeid = 705;
 ```
@@ -54,11 +54,19 @@ where date(orderdate) between date('2017-09-02') and date('2017-09-03') ;
 ```
 
 문제8번) products 테이블을 활용하여, productdescription에 상품 상세 설명 값이 없는  상품 데이터를 모두 알려주세요.
-
+- 풀이 1
 ```
 from products
 where productdescription is null or productdescription = ' ';
 ```
+
+-풀이 2
+```
+select *, coalesce(productdescription, 'Empty') as new_preduct
+from products
+where productdescription is null;
+```
+
 
 문제9 번) vendors 테이블을 이용하여, vendor의 State 지역이 NY 또는 WA 인 업체의 이름을 알려주세요.
 
