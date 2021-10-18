@@ -60,7 +60,7 @@ from products
 where productdescription is null or productdescription = ' ';
 ```
 
--풀이 2
+- 풀이 2
 ```
 select *, coalesce(productdescription, 'Empty') as new_preduct
 from products
