@@ -1,4 +1,149 @@
-# Week 2
+# Week1 SQL Study
+
+## 활용할 쿼리문
+
+- 조인
+
+![image](https://user-images.githubusercontent.com/53207478/138013098-32adadb9-106e-465d-88cb-37f2bf21f406.png)
+
+
+1) Inner Join
+
+교집합이 되는 영역을 구하기
+
+- 2개의 테이블 조인
+
+```
+select columns
+from table1
+inner join table2
+on table1.col_name = table2.col_name;
+```
+
+- 3개 테이블 조인
+
+```
+select columns
+from ((table1
+inner join table2 on table1.column1 = taable2.column1)
+inner join table3 on table1.column2 = table3.column2);
+```
+
+2) Outer Join (Left, Right, Full Outer)
+
+- Left Join
+
+```
+select *
+from table1
+left join table2
+on table1.col = table2.col;
+```
+
+- Right Join
+
+```
+select *
+from table1
+right join table2
+on table1.col = table2.col;
+```
+
+- Full Outer Join
+
+합집합이 되는 모든 영역 구하기
+
+```
+SELECT *
+from table1
+full outer join table2
+on table1.column = table2.column;
+```
+
+3) Self Join
+
+하나의 테이블을 통해 조인을 시키는 쿼리
+
+```
+select *
+from table1 T1, table2 T2
+where condition;
+```
+
+4) Cross Join
+
+Cross Join은 pandas에 melt()기능과 비슷한 역할을 하는것으로 각 n개의 테이블과 m개의 테이블을 합쳐 n x m의 형태로 만드는 쿼리
+
+![image](https://user-images.githubusercontent.com/53207478/138019319-bef20dc4-1dec-49a2-9b6a-dddbe1b4449c.png)
+
+
+```
+select *
+from table1
+cross join table2
+```
+
+
+5) Natural Join
+
+inner join과 똑같은 조인 쿼리이다. 단, 하나 다른점은 Inner join은 기준이 되는 컬럼이 join 이후에 2번 반복생성되는 반면에 natural join 은 반복되지 않은 상태로 출력된다. 즉, 1개의 컬럼이 적은상태로 생성된다.
+
+```
+select *
+from table1
+natural join table2
+```
+
+- Group by
+
+aggregation function(count(), max(), min(), sum(), avg())와 함께 사용하여 그룹화시켜 정보를 얻을 수 있는 쿼리
+ex) 각 나라별 출생율
+
+```
+select *
+from table
+where condition
+group by column
+order by column;
+```
+
+- Having
+
+where와 같은 조건문이다. 단, where는 aggregation function을 사용할 수 없는 단점을 보완하기 위해서 Having 쿼리가 생겼다.
+
+```
+select *
+from table
+group by column
+having count(column) > 5;
+```
+
+- 집합연산자와 서브쿼리
+
+1) Union
+
+```
+
+```
+
+2) UnionAll
+
+```
+
+```
+
+3) intersect
+
+```
+
+```
+
+4) except
+
+```
+
+```
+
 
 ## Part 3
     
