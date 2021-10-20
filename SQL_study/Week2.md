@@ -127,28 +127,63 @@ having count(column) > 5;
 
 #### 1) Union
 
-```
+중복을 포함하지 않은 집합
 
+![image](https://user-images.githubusercontent.com/53207478/138022347-2713a9e7-0905-441c-a895-e62584644a37.png)
+
+```
+select column from table1
+union
+select column from table2;
 ```
 
 #### 2) UnionAll
 
-```
+중복을 포함하는 집합
+
+![image](https://user-images.githubusercontent.com/53207478/138022382-ab5b00d8-40eb-4134-8472-b59792f6906a.png)
 
 ```
-
-#### 3) intersect
-
+select column from table1
+union all
+select column from table2;
 ```
 
+#### 3) Intersect
+
+교집합의 형태로 두개의 다른 Select문에서 겹치는 데이터를 보여주는 쿼리
+
+![image](https://user-images.githubusercontent.com/53207478/138022419-f7c20972-2576-4c3b-8fa7-6c13469bbc5f.png)
+
+```
+select col1, col2, ...
+from table1
+where condition
+
+intersect
+
+select col1, col2, ...
+from table 2
+where condition
 ```
 
-#### 4) except
+#### 4) Except
+
+가장 빈번하게 사용되는 쿼리문 중 하나로 첫번째 Select문을 기준으로 두번째 select문에는 없는 데이터를 보여주는 쿼리.
+
+![image](https://user-images.githubusercontent.com/53207478/138022450-5c6436fd-dd51-4590-a734-19c5635dacc0.png)
 
 ```
-
+select columns from table1
+except
+select columns from table2;
 ```
 
+
+### 집합연산자 union과 join의 차이점
+- join은 적어도 하나의 속성이 공통인 두 릴레이션의 속성을 결합할 때 사용
+
+- Union은 쿼리에 명시된 두 릴레이션의 튜플을 결합할 때 사용
 
 ## Part 3
     
