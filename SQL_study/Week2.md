@@ -1,208 +1,47 @@
-# Week1 SQL Study
-
-## 활용할 쿼리문
-
-### 조인
-
-![image](https://user-images.githubusercontent.com/53207478/138013098-32adadb9-106e-465d-88cb-37f2bf21f406.png)
-
-
-#### 1) Inner Join
-
-교집합이 되는 영역을 구하기
-
-##### 2개의 테이블 조인
-
-```
-select columns
-from table1
-inner join table2
-on table1.col_name = table2.col_name;
-```
-
-##### 3개 테이블 조인
-
-```
-select columns
-from ((table1
-inner join table2 on table1.column1 = taable2.column1)
-inner join table3 on table1.column2 = table3.column2);
-```
-
-
-#### 2) Outer Join (Left, Right, Full Outer)
-
-##### Left Join
-
-```
-select *
-from table1
-left join table2
-on table1.col = table2.col;
-```
-
-##### Right Join
-
-```
-select *
-from table1
-right join table2
-on table1.col = table2.col;
-```
-
-##### Full Outer Join
-
-합집합이 되는 모든 영역 구하기
-
-```
-SELECT *
-from table1
-full outer join table2
-on table1.column = table2.column;
-```
-
-
-#### 3) Self Join
-
-하나의 테이블을 통해 조인을 시키는 쿼리
-
-```
-select *
-from table1 T1, table2 T2
-where condition;
-```
-
-
-#### 4) Cross Join
-
-Cross Join은 pandas에 melt()기능과 비슷한 역할을 하는것으로 각 n개의 테이블과 m개의 테이블을 합쳐 n x m의 형태로 만드는 쿼리
-
-![image](https://user-images.githubusercontent.com/53207478/138019319-bef20dc4-1dec-49a2-9b6a-dddbe1b4449c.png)
-
-
-```
-select *
-from table1
-cross join table2
-```
-
-
-
-#### 5) Natural Join
-
-inner join과 똑같은 조인 쿼리이다. 단, 하나 다른점은 Inner join은 기준이 되는 컬럼이 join 이후에 2번 반복생성되는 반면에 natural join 은 반복되지 않은 상태로 출력된다. 즉, 1개의 컬럼이 적은상태로 생성된다.
-
-```
-select *
-from table1
-natural join table2
-```
-
-
-### Group by
-
-aggregation function(count(), max(), min(), sum(), avg())와 함께 사용하여 그룹화시켜 정보를 얻을 수 있는 쿼리
-ex) 각 나라별 출생율
-
-```
-select *
-from table
-where condition
-group by column
-order by column;
-```
-
-### Having
-
-where와 같은 조건문이다. 단, where는 aggregation function을 사용할 수 없는 단점을 보완하기 위해서 Having 쿼리가 생겼다.
-
-```
-select *
-from table
-group by column
-having count(column) > 5;
-```
-
-### 집합연산자와 서브쿼리
-
-#### 1) Union
-
-중복을 포함하지 않은 집합
-
-![image](https://user-images.githubusercontent.com/53207478/138022347-2713a9e7-0905-441c-a895-e62584644a37.png)
-
-```
-select column from table1
-union
-select column from table2;
-```
-
-#### 2) UnionAll
-
-중복을 포함하는 집합
-
-![image](https://user-images.githubusercontent.com/53207478/138022382-ab5b00d8-40eb-4134-8472-b59792f6906a.png)
-
-```
-select column from table1
-union all
-select column from table2;
-```
-
-#### 3) Intersect
-
-교집합의 형태로 두개의 다른 Select문에서 겹치는 데이터를 보여주는 쿼리
-
-![image](https://user-images.githubusercontent.com/53207478/138022419-f7c20972-2576-4c3b-8fa7-6c13469bbc5f.png)
-
-```
-select col1, col2, ...
-from table1
-where condition
-
-intersect
-
-select col1, col2, ...
-from table 2
-where condition
-```
-
-#### 4) Except
-
-가장 빈번하게 사용되는 쿼리문 중 하나로 첫번째 Select문을 기준으로 두번째 select문에는 없는 데이터를 보여주는 쿼리.
-
-![image](https://user-images.githubusercontent.com/53207478/138022450-5c6436fd-dd51-4590-a734-19c5635dacc0.png)
-
-```
-select columns from table1
-except
-select columns from table2;
-```
-
-
-### 집합연산자 union과 join의 차이점
-- join은 적어도 하나의 속성이 공통인 두 릴레이션의 속성을 결합할 때 사용
-
-- Union은 쿼리에 명시된 두 릴레이션의 튜플을 결합할 때 사용
+# Week 2
 
 ## Part 3
     
 문제1번) 고객의 기본 정보인, 고객 id, 이름, 성, 이메일과 함께 고객의 주소 address, district, postal_code, phone 번호를 함께 보여주세요.
 
 ```
-
+select cust.customer_id, cust.first_name, cust.last_name, cust.email, ad.address, ad.district, ad.phone
+from customer as cust
+left join address as ad 
+on cust.address_id = ad.address_id
+order by cust.customer_id;
 ```
 
 문제2번) 고객의  기본 정보인, 고객 id, 이름, 성, 이메일과 함께 고객의 주소 address, district, postal_code, phone , city 를 함께 알려주세요.
 
 ```
-
+select cust.customer_id, cust.first_name, cust.last_name, cust.email, ad.address, ad.district, ad.phone, c.city
+from (
+		(customer as cust                       -- Customer 테이블을 기준으로 조인 생성
+			left join address as ad             -- address 테이블과 left join
+			on cust.address_id = ad.address_id
+		)                                        
+	left join city as c                         -- customer와 address를 customer 기준으로 left 조인을 한 테이블에 city 테이블 조인
+	on ad.city_id = c.city_id
+	)
+;
 ```
+
+
 
 문제3번) Lima City에 사는 고객의 이름과, 성, 이메일, phonenumber에 대해서 알려주세요.
 
 ```
-
+select customer_id, last_name, email, phone
+from (
+		(customer cust
+		left join address ad 
+		on cust.address_id = ad.address_id
+		)
+		left join city c
+		on ad.city_id = c.city_id 
+	)
+where c.city = 'Lima';
 ```
 
 문제4번) rental 정보에 추가로, 고객의 이름과, 직원의 이름을 함께 보여주세요.
@@ -210,26 +49,68 @@ select columns from table2;
 - 고객의 이름, 직원 이름은 이름과 성을 fullname 컬럼으로만들어서 직원이름/고객이름 2개의 컬럼으로 확인해주세요.
 
 ```
-
+select r.rental_id ,r.rental_date ,r.inventory_id ,r.customer_id ,r.return_date,r.staff_id ,r.last_update ,
+		concat(cust.first_name, ', ' ,cust.last_name) as cust_fullname, 
+		concat(st.first_name, ', ', st.last_name) as staff_fullname
+from (
+		(rental r
+		left join customer cust
+		on r.customer_id = cust.customer_id
+		)
+		left join staff st
+		on r.staff_id = st.staff_id 
+	 );
 ```
 
 문제5번) [seth.hannon@sakilacustomer.org](mailto:seth.hannon@sakilacustomer.org) 이메일 주소를 가진 고객의  주소 address, address2, postal_code, phone, city 주소를 알려주세요.
 
 ```
-
+select cust.email, ad.address, ad.address2, ad.postal_code, ad.phone, c.city
+from (
+		(address ad
+		left join customer cust
+		on ad.address_id = cust.address_id)
+	 )
+	 left join city c
+	 on ad.city_id  = c.city_id 
+where cust.email = 'seth.hannon@sakilacustomer.org';
 ```
 
 문제6번) Jon Stephens 직원을 통해 dvd대여를 한 payment 기록 정보를  확인하려고 합니다.
 - payment_id,  고객 이름 과 성,  rental_id, amount, staff 이름과 성을 알려주세요.
 
 ```
-
+select *
+from 
+	(select p.payment_id, 
+			concat(c.first_name, ' ',c.last_name) as cust_fullname,
+			r.rental_id, 
+			p.amount,
+			concat(s.first_name, ' ', s.last_name) as staff_fullname
+	 from payment p 
+	 left join staff s 
+	 on p.staff_id =s.staff_id  -- staff_id로 payment와 staff 테이블 조
+	 
+	 left join customer c 
+     on p.customer_id = c.customer_id  -- customer_id로 payment와 customer 테이블 조
+     
+	 left join rental r
+	 on p.rental_id = r.rental_id -- rental_id로 payment와 rental 테이블 조
+	 ) as all_table -- subquery table을 "all_table"로 저장
+	 
+where all_table.staff_fullname = 'Jon Stephens';
 ```
 
 문제7번) 배우가 출연하지 않는 영화의 film_id, title, release_year, rental_rate, length 를 알려주세요.
 
 ```
-
+select *
+from (select f.film_id, f.title, f.release_year, f.rental_rate, f.length, fa.actor_id 
+	  from film f 
+	  full outer join film_actor fa
+	  on f.film_id = fa.film_id
+	  where fa.actor_id is null
+	 ) as db; -- subquery의 이름을 정의하지 않으면 에러
 ```
 
 문제8번) store 상점 id별 주소 (address, address2, distict) 와 해당 상점이 위치한 city 주소를 알려주세요.
