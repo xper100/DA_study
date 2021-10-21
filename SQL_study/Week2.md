@@ -16,15 +16,11 @@ order by cust.customer_id;
 
 ```
 select cust.customer_id, cust.first_name, cust.last_name, cust.email, ad.address, ad.district, ad.phone, c.city
-from (
-		(customer as cust                       -- Customer 테이블을 기준으로 조인 생성
-			left join address as ad             -- address 테이블과 left join
-			on cust.address_id = ad.address_id
-		)                                        
-	left join city as c                         -- customer와 address를 customer 기준으로 left 조인을 한 테이블에 city 테이블 조인
-	on ad.city_id = c.city_id
-	)
-;
+from customer as cust
+left join address as ad 
+	on cust.address_id = ad.address_id
+left join city as c 
+	on ad.city_id = c.city_id;
 ```
 
 
@@ -33,14 +29,11 @@ from (
 
 ```
 select customer_id, last_name, email, phone
-from (
-		(customer cust
-		left join address ad 
-		on cust.address_id = ad.address_id
-		)
-		left join city c
-		on ad.city_id = c.city_id 
-	)
+from customer cust
+left join address ad 
+	on cust.address_id = ad.address_id
+left join city c
+	on ad.city_id = c.city_id 
 where c.city = 'Lima';
 ```
 
@@ -52,26 +45,22 @@ where c.city = 'Lima';
 select r.rental_id ,r.rental_date ,r.inventory_id ,r.customer_id ,r.return_date,r.staff_id ,r.last_update ,
 		concat(cust.first_name, ', ' ,cust.last_name) as cust_fullname, 
 		concat(st.first_name, ', ', st.last_name) as staff_fullname
-from (
-		(rental r
-		left join customer cust
-		on r.customer_id = cust.customer_id
-		)
-		left join staff st
-		on r.staff_id = st.staff_id 
-	 );
+from rental r
+left join customer cust
+	on r.customer_id = cust.customer_id
+left join staff st
+	on r.staff_id = st.staff_id 
+;
 ```
 
 문제5번) [seth.hannon@sakilacustomer.org](mailto:seth.hannon@sakilacustomer.org) 이메일 주소를 가진 고객의  주소 address, address2, postal_code, phone, city 주소를 알려주세요.
 
 ```
 select cust.email, ad.address, ad.address2, ad.postal_code, ad.phone, c.city
-from (
-		(address ad
-		left join customer cust
-		on ad.address_id = cust.address_id)
-	 )
-	 left join city c
+from address ad
+left join customer cust
+	on ad.address_id = cust.address_id
+left join city c
 	 on ad.city_id  = c.city_id 
 where cust.email = 'seth.hannon@sakilacustomer.org';
 ```
@@ -116,25 +105,46 @@ from (select f.film_id, f.title, f.release_year, f.rental_rate, f.length, fa.act
 문제8번) store 상점 id별 주소 (address, address2, distict) 와 해당 상점이 위치한 city 주소를 알려주세요.
 
 ```
+select s.store_id, a.address ,a.address2 ,a.district , c.city 
+from store s 
+left join address a 
+	on a.address_id  = s.address_id
+left join city c 
+	on c.city_id = a.city_id 
+;
 
 ```
 
 문제9번) 고객의 id 별로 고객의 이름 (first_name, last_name), 이메일, 고객의 주소 (address, district), phone번호, city, country 를 알려주세요.
 
 ```
-
+select customer.customer_id, concat(customer.first_name, customer.last_name) as full_name, customer.email, 
+		concat(address.address, address.district) as address, address.phone , city.city, country.country
+from customer
+left join address on customer.address_id  = address.address_id 
+left join city on address.city_id = city.city_id 
+left join country on city.country_id = country.country_id ;
 ```
 
 문제10번) country 가 china 가 아닌 지역에 사는, 고객의 이름(first_name, last_name)과 , email, phonenumber, country, city 를 알려주세요
 
 ```
-
+select concat(customer.first_name, customer.last_name) as full_name, customer.email, address.phone, country.country, city.city 
+from customer
+left join address on customer.address_id = address.address_id 
+left join city on address.city_id = city.city_id 
+left join country on country.country_id = city.country_id
+where country.country <> 'China'; 
 ```
 
 문제11번) Horror 카테고리 장르에 해당하는 영화의 이름과 description 에 대해서 알려주세요
 
 ```
-
+select film.title, film.description
+from film
+left join film_category on film_category.film_id = film.film_id 
+left join category on film_category.category_id = category.category_id 
+where category.name = 'Horror';
 ```
 
 문제12번) Music 장르이면서, 영화길이가 60~180분 사이에 해당하는 영화의 title, description, length 를 알려주세요.
@@ -142,13 +152,25 @@ from (select f.film_id, f.title, f.release_year, f.rental_rate, f.length, fa.act
 - 영화 길이가 짧은 순으로 정렬해서 알려주세요.
 
 ```
-
+select film.title, film.description, film.length
+from film
+left join film_category on film_category.film_id = film.film_id 
+left join category on film_category.category_id = category.category_id 
+where category.name = 'Music' and film.length between 60 and 180
+order by film.length asc;
 ```
 
 문제13번) actor 테이블을 이용하여,  배우의 ID, 이름, 성 컬럼에 추가로    'Angels Life' 영화에 나온 영화 배우 여부를 Y , N 으로 컬럼을 추가 표기해주세요.  해당 컬럼은 angelslife_flag로 만들어주세요.
 
 ```
-
+select distinct actor.actor_id, actor.first_name , actor.last_name, 
+	case when film.title = 'Angels Life' then 'Y'
+	else 'N'
+	end as angelslife_flag
+from actor
+left join film_actor on actor.actor_id = film_actor.actor_id 
+left join film on film_actor.film_id = film.film_id
+order by actor.actor_id ;
 ```
 
 문제14번) 대여일자가 2005-06-01~ 14일에 해당하는 주문 중에서 , 직원의 이름(이름 성) = 'Mike Hillyer' 이거나  고객의 이름이 (이름 성) ='Gloria Cook'  에 해당 하는 rental 의 모든 정보를 알려주세요.
@@ -156,7 +178,14 @@ from (select f.film_id, f.title, f.release_year, f.rental_rate, f.length, fa.act
 - 추가로 직원이름과, 고객이름에 대해서도 fullname 으로 구성해서 알려주세요.
 
 ```
-
+select rental.*, concat(staff.first_name, ' ', staff.last_name) as staff_fullname, 
+	   concat(customer.first_name, ' ', customer.last_name) as customer_fullname
+from rental
+left join staff on rental.staff_id = staff.staff_id 
+left join customer on rental.customer_id = customer.customer_id 
+where (concat(staff.first_name, ' ', staff.last_name) = 'Mike Hillyer' or 
+	  concat(customer.first_name, ' ', customer.last_name) = 'Gloria Cook') and 
+	 date(rental.rental_date) between date('2005-06-01') and date ('2005-06-14');
 ```
 
 문제15번) 대여일자가 2005-06-01~ 14일에 해당하는 주문 중에서 , 직원의 이름(이름 성) = 'Mike Hillyer' 에 해당 하는 직원에게  구매하지 않은  rental 의 모든 정보를 알려주세요.
@@ -164,7 +193,13 @@ from (select f.film_id, f.title, f.release_year, f.rental_rate, f.length, fa.act
 - 추가로 직원이름과, 고객이름에 대해서도 fullname 으로 구성해서 알려주세요.
 
 ```
-
+select rental.*, concat(staff.first_name, ' ', staff.last_name) as staff_fullname, 
+	   concat(customer.first_name, ' ', customer.last_name) as customer_fullname
+from rental
+left join staff on rental.staff_id = staff.staff_id 
+left join customer on rental.customer_id = customer.customer_id 
+where concat(staff.first_name, ' ', staff.last_name) != 'Mike Hillyer' and 
+	 date(rental.rental_date) between date('2005-06-01') and date ('2005-06-14');
 ```
 
 ## Part 4
