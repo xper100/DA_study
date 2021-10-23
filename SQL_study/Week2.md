@@ -207,19 +207,27 @@ where concat(staff.first_name, ' ', staff.last_name) != 'Mike Hillyer' and
 문제1번) store 별로 staff는 몇명이 있는지 확인해주세요.
 
 ```
-
+select store_id , count(manager_staff_id) as num_staff
+from store 
+group by store_id;
 ```
 
 문제2번) 영화등급(rating) 별로 몇개 영화film을 가지고 있는지 확인해주세요.
 
 ```
+select rating, count(*) as cnt
+from film
+group by rating;
 
 ```
 
 문제3번) 출현한 영화배우(actor)가  10명 초과한 영화명은 무엇인가요?
 
 ```
-
+select film_id, count(*) as cnt
+from film_actor
+group by film_id 
+having count(*) > 10;
 ```
 
 문제4번) 영화 배우(actor)들이 출연한 영화는 각각 몇 편인가요?
@@ -227,13 +235,21 @@ where concat(staff.first_name, ' ', staff.last_name) != 'Mike Hillyer' and
 - 영화 배우의 이름 , 성 과 함께 출연 영화 수를 알려주세요.
 
 ```
-
+select actor.first_name , actor.last_name , count(*) as cnt
+from actor
+left join film_actor on film_actor.actor_id = actor.actor_id 
+group by actor.actor_id;
 ```
 
 문제5번) 국가(country)별 고객(customer) 는 몇명인가요?
 
 ```
-
+select country.country, count(customer.customer_id) as cnt
+from country
+right join city on city.country_id = country.country_id 
+right join address on address.city_id = city.city_id 
+right join customer on customer.address_id = address.city_id
+group by country.country_id;
 ```
 
 문제6번) 영화 재고 (inventory) 수량이 3개 이상인 영화(film) 는?
@@ -241,13 +257,21 @@ where concat(staff.first_name, ' ', staff.last_name) != 'Mike Hillyer' and
 - store는 상관 없이 확인해주세요.
 
 ```
-
+select film.title, count(*) as cnt
+from film
+left join inventory on inventory.film_id =film.film_id 
+group by film.title;
 ```
 
 문제7번) dvd 대여를 제일 많이한 고객 이름은?
 
 ```
-
+select concat(customer.first_name, ' ',customer.last_name) as name, count(*) as cnt
+from customer
+left join rental on rental.customer_id =customer.customer_id
+group by customer.customer_id 
+order by cnt desc
+limit 1;
 ```
 
 문제8번) rental 테이블을  기준으로,   2005년 5월26일에 대여를 기록한 고객 중, 하루에 2번 이상 대여를 한 고객의 ID 값을 확인해주세요.
