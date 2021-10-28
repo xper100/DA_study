@@ -1,5 +1,9 @@
 # Week 1 Quiz
 
+## 스키마
+![image](https://user-images.githubusercontent.com/53207478/139202590-8cb5082a-d08f-43d7-b0b7-59232176d029.png)
+
+
 문제1번)  각 제품 가격을 5 % 줄이려면 어떻게 해야 할까요?
 
 ```
