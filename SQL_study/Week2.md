@@ -196,8 +196,8 @@ where (concat(staff.first_name, ' ', staff.last_name) = 'Mike Hillyer' or
 select rental.*, concat(staff.first_name, ' ', staff.last_name) as staff_fullname, 
 	   concat(customer.first_name, ' ', customer.last_name) as customer_fullname
 from rental
-left join staff on rental.staff_id = staff.staff_id 
-left join customer on rental.customer_id = customer.customer_id 
+left outer join staff on rental.staff_id = staff.staff_id 
+left outer join customer on rental.customer_id = customer.customer_id 
 where concat(staff.first_name, ' ', staff.last_name) != 'Mike Hillyer' and 
 	 date(rental.rental_date) between date('2005-06-01') and date ('2005-06-14');
 ```
