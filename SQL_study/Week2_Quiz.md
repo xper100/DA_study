@@ -62,11 +62,21 @@ having count(product_vendors.productnumber) >= 2;
 ```
 
 
-1. 가장 높은 주문 금액을 산 고객은 누구인가요?
+6. 가장 높은 주문 금액을 산 고객은 누구인가요?
 - 주문일자별, 고객의 아이디별로, 주문번호, 주문 금액도 함께 알려주세요.
 
 ```
-
+select orders.orderdate, orders.customerid , orders.ordernumber, sum(db.total_price) as sum_price
+from orders
+join (
+	 select order_details.quotedprice * order_details.quantityordered as total_price,
+	 		orders.customerid , orders.orderdate , orders.ordernumber 
+	 from order_details 
+	 join orders on order_details.ordernumber =orders.ordernumber 
+ ) as db on orders.customerid = db.customerid
+group by orders.orderdate, orders.customerid , orders.ordernumber
+order by sum_price desc
+limit 1;
 ```
 
 7.주문일자별로, 주문 갯수와,  고객수를 알려주세요.
@@ -74,7 +84,15 @@ having count(product_vendors.productnumber) >= 2;
 - ex) 하루에 한 고객이 주문을 2번이상했다고 가정했을때 -> 해당의 경우는 고객수는 1명으로 계산해야합니다.
 
 ```
-
+select db.orderdate, sum(db.count_orders) as count_orders, count(db.customerid) as count_customer
+from
+	(
+	select orders.orderdate , orders.customerid , count(orders.ordernumber) as count_orders
+	from orders
+	group by orders.orderdate , orders.customerid
+	) as db
+group by db.orderdate
+order by db.orderdate;
 ```
 
 8번 생략
@@ -84,13 +102,35 @@ having count(product_vendors.productnumber) >= 2;
 - 타이어와 헬멧에 대해서는 , Products 테이블의 productname 컬럼을 이용해서 확인해주세요.
 
 ```
-
+select db.customerid, sum(db.helmet) as orders_helmet, sum(db.tire) as orders_tire
+from 		
+	(
+	select orders.customerid, products.productname,
+		case when products.productname like '%Helmet' then 1 else 0 end as helmet,
+		case when products.productname like '%Tire' then 1 else 0 end as tire
+	from orders
+	join order_details on orders.ordernumber = order_details.ordernumber 
+	join products on products.productnumber = order_details.productnumber
+	) as db
+group by db.customerid
+having sum(db.helmet) > 0 and sum(db.tire) > 0
+order by db.customerid;
 ```
 
 10. 타이어는 샀지만, 헬멧을 사지 않은 고객의 ID 를 알려주세요. Except 조건을 사용하여, 풀이 해주세요.
 - 타이어, 헬멧에 대해서는, Products 테이블의 productname 컬럼을 이용해서 확인해주세요.
 
 ```
+select distinct orders.customerid 
+from orders
+join order_details on orders.ordernumber = order_details.ordernumber 
+join products on order_details.productnumber =products.productnumber 
+where products.productname like '%Tire'
+order by orders.customerid 
 
+except
+
+select orders.customerid
+where products.productname like '%Helmet';
 ```
 
