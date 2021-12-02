@@ -1,5 +1,32 @@
 # Week 3
 
+- Any & All
+
+**ANY**는 범위내에 값이 있다면 True로 출력
+**All**은 범위내에 모든 값이 있다면 True로 출력
+ 
+```
+Select column
+from table1
+where column_name operator(==, <, >...) ALL 
+ (Select column
+  from table
+  where condition);
+```
+
+- Exists
+
+서브쿼리안에 하나라도 기록이 있다면 True로 출력
+
+```
+
+```
+
+
+
+
+
+
 ## Part 6
 
 문제1번) 매출을 가장 많이 올린 dvd 고객 이름은? (subquery 활용)
